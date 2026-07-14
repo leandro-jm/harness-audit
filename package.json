@@ -1,0 +1,54 @@
+{
+  "name": "harness-audit",
+  "version": "0.1.0",
+  "description": "CLI interativo de auditoria de SDD e Harness Engineering. 100% local, somente leitura.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Leandro J Martins",
+  "keywords": [
+    "harness",
+    "harness-engineering",
+    "spec-driven-development",
+    "sdd",
+    "ai-agents",
+    "audit",
+    "cli"
+  ],
+  "bin": {
+    "harness-audit": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "picocolors": "^1.1.1",
+    "simple-git": "^3.36.0",
+    "tinyglobby": "^0.2.17",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.1",
+    "eslint": "^10.7.0",
+    "prettier": "^3.9.5",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2",
+    "typescript-eslint": "^8.63.0",
+    "vitest": "^4.1.10"
+  }
+}

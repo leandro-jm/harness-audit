@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.log
+
+# Relatórios gerados pela própria ferramenta (dogfood)
+HARNESS-REPORT.md
+harness-score.json
+
+# OS / editor
+.DS_Store
+*.local
