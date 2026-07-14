@@ -1,4 +1,3 @@
-import { relative } from "node:path";
 import type { RunOptions } from "../core/types.js";
 import { t } from "../i18n/index.js";
 import { loadRepoContext } from "../context/repo-context.js";
@@ -27,7 +26,7 @@ export async function runHeadless(options: RunOptions): Promise<number> {
 
   process.stdout.write(renderTerminalReport(audit.score) + "\n\n");
   for (const file of res.writtenFiles) {
-    process.stdout.write(t("export.wrote", { file: relative(ctx.root, file) || file }) + "\n");
+    process.stdout.write(t("export.wrote", { file }) + "\n");
   }
   return 0;
 }

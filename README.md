@@ -55,6 +55,13 @@ pnpm typecheck    # tsc --noEmit
 pnpm lint         # eslint
 ```
 
+## Dogfood
+
+A ferramenta nasce praticando o que audita (SDD + Harness Engineering): tem
+[`CLAUDE.md`](CLAUDE.md) específico, CI com sensores, spec ([`specs/`](specs/) → PRD)
+e permissões de agente escopadas. Rodar `harness-audit` no próprio repositório
+devolve um score honesto — com as lacunas reais que ainda faltam fechar.
+
 ## Segurança
 
 Zero rede, somente leitura, nunca executa código do repositório auditado. Veja [SECURITY.md](SECURITY.md).

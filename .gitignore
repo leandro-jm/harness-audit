@@ -3,6 +3,11 @@ dist/
 coverage/
 *.log
 
+# Segredos
+.env
+.env.*
+!.env.example
+
 # Relatórios gerados pela própria ferramenta (dogfood)
 HARNESS-REPORT.md
 harness-score.json

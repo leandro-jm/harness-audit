@@ -178,7 +178,7 @@ class GitReader implements GitInfo {
 export async function loadGit(root: string): Promise<GitInfo> {
   const git = simpleGit({ baseDir: root });
 
-  let isRepo = false;
+  let isRepo: boolean;
   try {
     isRepo = await git.checkIsRepo();
   } catch {

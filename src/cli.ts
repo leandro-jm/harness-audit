@@ -22,6 +22,11 @@ Opções:
   --help             Mostrar esta ajuda
 `;
 
+// Saída canalizada e fechada cedo (ex.: `| head`) não deve travar nem quebrar.
+process.stdout.on("error", (err: NodeJS.ErrnoException) => {
+  if (err.code === "EPIPE") process.exit(0);
+});
+
 async function main(argv: string[]): Promise<number> {
   // parseArgs não trata `--no-color` nativamente; removemos e sinalizamos aqui.
   const noColor = argv.includes("--no-color");
