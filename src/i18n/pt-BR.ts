@@ -53,6 +53,45 @@ export const ptBR: Messages = {
   "level.regulado": "Regulado",
   "level.dirigido": "Dirigido",
 
+  // Wizard
+  "wizard.privacyTitle": "Privacidade",
+  "wizard.detectionTitle": "Detecção",
+  "wizard.confirmStack": "Confirma a stack detectada?",
+  "wizard.adjustLang": "Qual a linguagem principal?",
+  "wizard.profile": "Qual o perfil deste repositório?",
+  "wizard.running": "Rodando checks de evidência ({n})…",
+  "wizard.checksCount": "{n} checks",
+  "wizard.cancelled": "Operação cancelada. Nada foi escrito no repositório.",
+  "wizard.done": "Auditoria concluída.",
+
+  // Perfis
+  "profile.built-by-ai": "Aplicação desenvolvida COM agentes de IA",
+  "profile.uses-ai": "Aplicação que USA IA em runtime (LLM em produção)",
+  "profile.both": "Os dois",
+  "profile.conventional": "Convencional (quero preparar para receber agentes)",
+
+  // Perguntas de autorrelato
+  "q.fixFirst": "Quando o agente entrega errado, o que o time conserta primeiro?",
+  "q.fixFirst.code": "O código, na mão",
+  "q.fixFirst.prompt": "O prompt daquela vez",
+  "q.fixFirst.guide": "O guia ou o sensor que deixou passar",
+  "q.harnessOwner": "Existe responsável pelo harness (guias, sensores) com backlog?",
+  "q.harnessOwner.backlog": "Sim, com backlog",
+  "q.harnessOwner.informal": "Informalmente",
+  "q.harnessOwner.none": "Ninguém",
+  "q.sensorsBlockMerge": "Os checks de CI bloqueiam merge (branch protection) ou só informam?",
+  "q.sensorsBlockMerge.block": "Bloqueiam",
+  "q.sensorsBlockMerge.inform": "Só informam",
+  "q.sensorsBlockMerge.unknown": "Não sei",
+  "q.learningsToGuide": "Quando surge um erro novo, ele vira regra nova no guia?",
+  "q.learningsToGuide.yes": "Sim, quase sempre",
+  "q.learningsToGuide.sometimes": "Às vezes",
+  "q.learningsToGuide.no": "Não",
+  "q.tasksFromSpec": "As tarefas de implementação derivam de um plano/spec?",
+  "q.tasksFromSpec.yes": "Sim, sempre",
+  "q.tasksFromSpec.partial": "Parcialmente",
+  "q.tasksFromSpec.no": "Não",
+
   // Relatório (terminal + arquivos)
   "report.scoreLabel": "HARNESS SCORE",
   "report.level": "Nível",

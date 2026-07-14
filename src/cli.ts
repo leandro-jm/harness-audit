@@ -2,12 +2,8 @@ import { parseArgs } from "node:util";
 import { VERSION } from "./version.js";
 import { resolveOptions } from "./app/options.js";
 import { setLang, t } from "./i18n/index.js";
-import { loadRepoContext } from "./context/repo-context.js";
-import { describeDetection } from "./context/summary.js";
-import { runChecks } from "./app/run-checks.js";
-import { computeScore } from "./scoring/engine.js";
-import { renderTerminalReport } from "./report/terminal.js";
 import { setColorEnabled } from "./util/colors.js";
+import { runWizard, finishWizard } from "./app/wizard.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -26,20 +22,24 @@ Opções:
 `;
 
 async function main(argv: string[]): Promise<number> {
+  // parseArgs não trata `--no-color` nativamente; removemos e sinalizamos aqui.
+  const noColor = argv.includes("--no-color");
+  const cleanArgv = argv.filter((a) => a !== "--no-color");
+
   const { values } = parseArgs({
-    args: argv,
+    args: cleanArgv,
     allowPositionals: true,
     options: {
       path: { type: "string" },
       profile: { type: "string" },
       json: { type: "boolean", default: false },
       out: { type: "string" },
-      color: { type: "boolean", default: true },
       lang: { type: "string" },
       version: { type: "boolean", default: false },
       help: { type: "boolean", default: false },
     },
   });
+  const color = !noColor;
 
   if (values.version) {
     process.stdout.write(`${VERSION}\n`);
@@ -50,26 +50,28 @@ async function main(argv: string[]): Promise<number> {
     return 0;
   }
 
-  const options = resolveOptions(values);
+  const options = resolveOptions({ ...values, color });
   setLang(options.lang);
   setColorEnabled(options.color);
 
-  const ctx = await loadRepoContext(options);
-  if (!ctx.git.isRepo) {
-    process.stderr.write(t("detect.noGit", { path: ctx.root }) + "\n");
+  // Ctrl+C fora dos prompts do @clack (que já tratam via isCancel): saída limpa.
+  process.on("SIGINT", () => {
+    process.stdout.write("\n");
+    process.exit(0);
+  });
+
+  const outcome = await runWizard(options);
+
+  if (outcome === "no-git") {
+    process.stderr.write(t("detect.noGit", { path: options.path }) + "\n");
     return 2;
   }
-
-  // M1: imprime a detecção. Fluxo interativo completo entra no M6.
-  process.stdout.write(`harness-audit v${VERSION}\n`);
-  for (const line of describeDetection(ctx)) {
-    process.stdout.write(line + "\n");
+  if (outcome === "cancelled") {
+    return 0; // saída limpa, nada escrito
   }
 
-  // M4: roda os checks, calcula o score e renderiza o relatório de terminal.
-  const results = await runChecks(ctx);
-  const score = computeScore(results);
-  process.stdout.write("\n" + renderTerminalReport(score) + "\n");
+  // Exportação de relatórios entra no M7. Por ora encerra o wizard.
+  finishWizard();
   return 0;
 }
 

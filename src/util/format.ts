@@ -8,6 +8,11 @@ export function formatPercent(n: number): string {
   return `${Math.round(n)}%`;
 }
 
+/** Duração em ms → "0,4s" / "1,2s" (pt-BR). */
+export function formatDuration(ms: number): string {
+  return `${(ms / 1000).toFixed(1).replace(".", ",")}s`;
+}
+
 /**
  * Barra de progresso textual de `width` blocos preenchidos proporcionalmente a
  * value/max. Usa █ (cheio) e ░ (vazio) — legível sem depender de cor (a11y).
