@@ -92,3 +92,50 @@ export const RULES_STYLE_GLOBS = [
   ".prettierrc.*",
   "prettier.config.*",
 ];
+
+/** Execução isolada / sandbox (4.1). */
+export const DEVCONTAINER_GLOBS = [".devcontainer/**", ".gitpod.yml", ".gitpod.Dockerfile"];
+export const DOCKER_GLOBS = [
+  "Dockerfile",
+  "Dockerfile.*",
+  "**/Dockerfile.dev",
+  "docker-compose.yml",
+  "docker-compose.yaml",
+  "compose.yml",
+  "compose.yaml",
+];
+
+/** Higiene de segredos (4.2). */
+export const SECRET_SCANNER_GLOBS = [
+  ".gitleaks.toml",
+  "gitleaks.toml",
+  ".secretlintrc",
+  ".secretlintrc.*",
+  ".pre-commit-config.yaml",
+  ".trufflehog.*",
+];
+
+/** Revisão estruturada (4.3). */
+export const CODEOWNERS_GLOBS = ["CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS"];
+export const PR_TEMPLATE_GLOBS = [
+  ".github/pull_request_template.md",
+  ".github/PULL_REQUEST_TEMPLATE.md",
+  ".github/PULL_REQUEST_TEMPLATE/**",
+  "docs/pull_request_template.md",
+];
+
+/** Permissões de agente escopadas (4.4). */
+export const AGENT_PERMS_GLOBS = [
+  ".claude/settings.json",
+  ".claude/settings.local.json",
+  ".mcp.json",
+  ".cursor/environment.json",
+];
+
+/** Artefatos cujas edições indicam iteração no harness (6.2). */
+export const HARNESS_GLOBS = [
+  ...GUIDE_GLOBS,
+  ...RULES_STYLE_GLOBS,
+  ...ARCH_SENSOR_GLOBS,
+  ".github/workflows/**",
+];
