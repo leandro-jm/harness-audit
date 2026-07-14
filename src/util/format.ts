@@ -13,6 +13,15 @@ export function formatDuration(ms: number): string {
   return `${(ms / 1000).toFixed(1).replace(".", ",")}s`;
 }
 
+/** Data/hora em pt-BR: "14/07/2026 15:30" (sem depender de Intl locale). */
+export function formatDateTimePtBR(date: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${p(date.getDate())}/${p(date.getMonth() + 1)}/${date.getFullYear()} ` +
+    `${p(date.getHours())}:${p(date.getMinutes())}`
+  );
+}
+
 /**
  * Barra de progresso textual de `width` blocos preenchidos proporcionalmente a
  * value/max. Usa █ (cheio) e ░ (vazio) — legível sem depender de cor (a11y).

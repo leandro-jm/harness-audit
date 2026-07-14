@@ -106,11 +106,44 @@ export const ptBR: Messages = {
   "source.sdd": "Spec-Driven Development (Spec Kit / Kiro / OpenSpec)",
   "source.harness": "Série Harness Engineering",
 
+  // Exportação
+  "export.prompt": "Exportar relatório?",
+  "export.snippet": "Snippet de compartilhamento",
+  "export.hint.md": "relatório humano",
+  "export.hint.json": "estrutura de máquina",
+  "export.hint.snippet": "texto p/ post",
+  "export.wrote": "Escrito: {file}",
+  "export.snippetTitle": "Snippet de compartilhamento",
+  "export.gitignore": "Adicionar {files} ao .gitignore?",
+  "export.gitignoreDone": ".gitignore atualizado.",
+
   // Recomendações (rec.<checkId>)
-  "rec.2.1":
-    "Adicione um guia de agente (CLAUDE.md/AGENTS.md) citando scripts e diretórios reais do repositório.",
-  "rec.3.1":
-    "Configure CI que rode em pull_request (lint, tipos e testes) como sensor a cada mudança.",
+  "rec.1.1": "Traga a especificação para dentro do repo (specs/, spec.md, Spec Kit/Kiro/OpenSpec).",
+  "rec.1.2": "Versione a spec de verdade: commits frequentes e revisão por mais de uma pessoa.",
+  "rec.1.3": "Escreva a spec antes de implementar; deixe o commit da spec anteceder o do código.",
+  "rec.1.4": "Feche o drift: toda mudança relevante em src/ deve atualizar a spec correspondente.",
+  "rec.1.5": "Derive tarefas/planos da spec (specify → plan → tasks) e deixe o rastro no repo.",
+  "rec.2.1": "Adicione um guia de agente (CLAUDE.md/AGENTS.md) citando scripts e diretórios reais.",
+  "rec.2.2": "Torne o guia específico: cite scripts do package.json, diretórios e comandos executáveis.",
+  "rec.2.3": "Mantenha o guia fresco — atualize-o junto com mudanças estruturais no código.",
+  "rec.2.4": "Declare regras de arquitetura/estilo (config de lint/format + seção de convenções).",
+  "rec.3.1": "Configure CI que rode em pull_request (lint, tipos e testes) como sensor a cada mudança.",
+  "rec.3.2": "Adicione um step de lint no CI como sensor de estilo.",
+  "rec.3.3": "Adicione typecheck (tsc --noEmit / mypy) no CI como sensor de tipos.",
+  "rec.3.4": "Adicione um step de testes no CI como sensor de comportamento.",
+  "rec.3.5": "Adicione um sensor de arquitetura (dependency-cruiser, eslint-plugin-boundaries).",
+  "rec.3.6": "Torne os sensores bloqueantes via branch protection — informar não regula.",
+  "rec.4.1": "Ofereça execução isolada (devcontainer/Dockerfile) para o agente rodar com segurança.",
+  "rec.4.2": "Reforce a higiene de segredos: scanner (gitleaks), .env no .gitignore, sem chaves commitadas.",
+  "rec.4.3": "Estruture a revisão com CODEOWNERS e template de PR.",
+  "rec.4.4": "Escope as permissões do agente (allowlist de comandos em .claude/settings.json).",
+  "rec.5.1": "Mantenha a memória procedural viva: guia existente E atualizado junto com o código.",
+  "rec.5.2": "Registre decisões de arquitetura (ADRs) como memória semântica do projeto.",
+  "rec.5.3": "Feche o loop de aprendizado: erro novo vira regra nova no guia.",
+  "rec.6.1": "Se há correção manual crônica, conserte o guia/sensor que deixou passar, não só o código.",
+  "rec.6.2": "Itere no harness a partir dos fixes — cada rajada de conserto é sinal para ajustar guia/sensor.",
+  "rec.6.3": "Ao errar, conserte primeiro o guia ou o sensor (feche o steering loop), não só o código.",
+  "rec.6.4": "Dê dono ao harness, com backlog de guias e sensores a evoluir.",
 
   // Check 2.1 — guia de agente existe
   "check.2.1.title": "Guia de agente existe",

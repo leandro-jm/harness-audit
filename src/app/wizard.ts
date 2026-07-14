@@ -4,11 +4,13 @@ import {
   note,
   confirm,
   select,
+  multiselect,
   spinner,
   isCancel,
   cancel,
   log,
 } from "@clack/prompts";
+import { relative } from "node:path";
 import { DIMENSIONS, type Profile, type RunOptions } from "../core/types.js";
 import type { Language } from "../context/stack.js";
 import { t } from "../i18n/index.js";
@@ -22,6 +24,14 @@ import { computeScore } from "../scoring/engine.js";
 import { renderTerminalReport } from "../report/terminal.js";
 import { relevantQuestions } from "../self-report/questions.js";
 import type { AuditResult } from "./run-audit.js";
+import {
+  writeReports,
+  missingGitignoreEntries,
+  appendGitignore,
+  REPORT_MD,
+  REPORT_JSON,
+  type ExportChoice,
+} from "../report/export.js";
 
 const PROFILE_OPTIONS = (["built-by-ai", "uses-ai", "both", "conventional"] as Profile[]).map(
   (value) => ({ value, label: t(`profile.${value}`) }),
@@ -118,15 +128,59 @@ export async function runWizard(options: RunOptions): Promise<WizardOutcome | "n
 
     // 5. Score + render.
     const score = computeScore(results);
+    const audit: AuditResult = { results, score };
     process.stdout.write("\n" + renderTerminalReport(score) + "\n\n");
 
-    return { ctx, audit: { results, score } };
+    // 6. Exportação consentida (nada é escrito sem escolha explícita).
+    await exportStep(ctx, audit);
+
+    return { ctx, audit };
   } catch (err) {
     if (err instanceof Cancelled) {
       cancel(t("wizard.cancelled"));
       return "cancelled";
     }
     throw err;
+  }
+}
+
+/** Passo de exportação: multiselect → escreve arquivos escolhidos → oferece .gitignore. */
+async function exportStep(ctx: RepoContext, audit: AuditResult): Promise<void> {
+  const choice = guard(
+    await multiselect({
+      message: t("export.prompt"),
+      required: false,
+      options: [
+        { value: "md" as ExportChoice, label: REPORT_MD, hint: t("export.hint.md") },
+        { value: "json" as ExportChoice, label: REPORT_JSON, hint: t("export.hint.json") },
+        { value: "snippet" as ExportChoice, label: t("export.snippet"), hint: t("export.hint.snippet") },
+      ],
+    }),
+  );
+  const choices = choice as ExportChoice[];
+  if (choices.length === 0) return;
+
+  const res = writeReports(ctx, audit, choices, new Date());
+  for (const file of res.writtenFiles) {
+    log.success(t("export.wrote", { file: relative(ctx.root, file) || file }));
+  }
+  if (res.snippet) note(res.snippet, t("export.snippetTitle"));
+
+  // Oferece adicionar ao .gitignore quando escrevemos dentro do próprio repo.
+  if (res.writtenFiles.length > 0 && res.outDir === ctx.root) {
+    const missing = missingGitignoreEntries(
+      ctx.root,
+      res.writtenFiles.map((f) => (f.endsWith(".json") ? REPORT_JSON : REPORT_MD)),
+    );
+    if (missing.length > 0) {
+      const add = guard(
+        await confirm({ message: t("export.gitignore", { files: missing.join(", ") }) }),
+      );
+      if (add) {
+        appendGitignore(ctx.root, missing);
+        log.success(t("export.gitignoreDone"));
+      }
+    }
   }
 }
 

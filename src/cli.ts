@@ -4,6 +4,7 @@ import { resolveOptions } from "./app/options.js";
 import { setLang, t } from "./i18n/index.js";
 import { setColorEnabled } from "./util/colors.js";
 import { runWizard, finishWizard } from "./app/wizard.js";
+import { runHeadless } from "./app/headless.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -53,6 +54,11 @@ async function main(argv: string[]): Promise<number> {
   const options = resolveOptions({ ...values, color });
   setLang(options.lang);
   setColorEnabled(options.color);
+
+  // Caminho não-interativo: --json / --out exportam direto, sem prompts.
+  if (options.json || options.out) {
+    return runHeadless(options);
+  }
 
   // Ctrl+C fora dos prompts do @clack (que já tratam via isCancel): saída limpa.
   process.on("SIGINT", () => {
