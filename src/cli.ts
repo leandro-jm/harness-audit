@@ -6,7 +6,8 @@ import { loadRepoContext } from "./context/repo-context.js";
 import { describeDetection } from "./context/summary.js";
 import { runChecks } from "./app/run-checks.js";
 import { computeScore } from "./scoring/engine.js";
-import { formatScore, formatPercent } from "./util/format.js";
+import { renderTerminalReport } from "./report/terminal.js";
+import { setColorEnabled } from "./util/colors.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -51,6 +52,7 @@ async function main(argv: string[]): Promise<number> {
 
   const options = resolveOptions(values);
   setLang(options.lang);
+  setColorEnabled(options.color);
 
   const ctx = await loadRepoContext(options);
   if (!ctx.git.isRepo) {
@@ -64,21 +66,10 @@ async function main(argv: string[]): Promise<number> {
     process.stdout.write(line + "\n");
   }
 
-  // M2/M3: roda os checks e calcula o score (render bonito entra no M4).
+  // M4: roda os checks, calcula o score e renderiza o relatório de terminal.
   const results = await runChecks(ctx);
   const score = computeScore(results);
-
-  process.stdout.write(
-    `\nHARNESS SCORE: ${formatScore(score.global)} / 4 · ${t(`level.${score.level}`)}\n` +
-      `Confiança: ${formatPercent(score.confidence)} baseado em evidência\n\nChecks:\n`,
-  );
-  for (const r of results) {
-    process.stdout.write(
-      `  ${r.checkId} [${r.status}] ${r.points}/${r.max} · ${t(`seal.${r.seal}`)}` +
-        (r.recommendationId ? ` → ${r.recommendationId}` : "") +
-        "\n",
-    );
-  }
+  process.stdout.write("\n" + renderTerminalReport(score) + "\n");
   return 0;
 }
 

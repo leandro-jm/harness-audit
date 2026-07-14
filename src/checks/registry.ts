@@ -19,3 +19,10 @@ export const ALL_CHECKS: Check[] = [
 export function forProfile(profile: Profile): Check[] {
   return ALL_CHECKS.filter((c) => c.profiles.includes(profile));
 }
+
+const TITLE_BY_ID = new Map(ALL_CHECKS.map((c) => [c.id, c.titleKey]));
+
+/** Chave i18n do título de um check (para relatórios/lacunas). */
+export function checkTitleKey(checkId: string): string | undefined {
+  return TITLE_BY_ID.get(checkId);
+}

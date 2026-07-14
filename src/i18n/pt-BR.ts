@@ -53,6 +53,26 @@ export const ptBR: Messages = {
   "level.regulado": "Regulado",
   "level.dirigido": "Dirigido",
 
+  // Relatório (terminal + arquivos)
+  "report.scoreLabel": "HARNESS SCORE",
+  "report.level": "Nível",
+  "report.confidence": "Confiança: {pct} do score baseado em evidência",
+  "report.topGaps": "TOP {n} LACUNAS",
+  "report.noGaps": "Sem lacunas priorizadas — harness sólido.",
+  "report.dimNa": "n/d",
+
+  // Fontes conceituais (rastreabilidade, Apêndice B)
+  "source.bockeler": "Böckeler · Harness Engineering (Thoughtworks)",
+  "source.coala": "CoALA · taxonomia de memória de agente",
+  "source.sdd": "Spec-Driven Development (Spec Kit / Kiro / OpenSpec)",
+  "source.harness": "Série Harness Engineering",
+
+  // Recomendações (rec.<checkId>)
+  "rec.2.1":
+    "Adicione um guia de agente (CLAUDE.md/AGENTS.md) citando scripts e diretórios reais do repositório.",
+  "rec.3.1":
+    "Configure CI que rode em pull_request (lint, tipos e testes) como sensor a cada mudança.",
+
   // Check 2.1 — guia de agente existe
   "check.2.1.title": "Guia de agente existe",
   "check.2.1.found": "Guia encontrado: {file}",
