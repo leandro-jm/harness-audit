@@ -46,6 +46,13 @@ export const ptBR: Messages = {
   "seal.proxy": "proxy",
   "seal.autorrelato": "autorrelato",
 
+  // Níveis de maturidade
+  "level.fe": "Fé",
+  "level.improviso": "Improviso",
+  "level.instrumentado": "Instrumentado",
+  "level.regulado": "Regulado",
+  "level.dirigido": "Dirigido",
+
   // Check 2.1 — guia de agente existe
   "check.2.1.title": "Guia de agente existe",
   "check.2.1.found": "Guia encontrado: {file}",

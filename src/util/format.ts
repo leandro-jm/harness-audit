@@ -1,0 +1,19 @@
+/** Formata um número 0..4 com 1 casa decimal e vírgula (pt-BR): 2.3 → "2,3". */
+export function formatScore(n: number): string {
+  return n.toFixed(1).replace(".", ",");
+}
+
+/** Formata uma porcentagem inteira: 78 → "78%". */
+export function formatPercent(n: number): string {
+  return `${Math.round(n)}%`;
+}
+
+/**
+ * Barra de progresso textual de `width` blocos preenchidos proporcionalmente a
+ * value/max. Usa █ (cheio) e ░ (vazio) — legível sem depender de cor (a11y).
+ */
+export function bar(value: number, max: number, width = 10): string {
+  const ratio = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
+  const filled = Math.round(ratio * width);
+  return "█".repeat(filled) + "░".repeat(width - filled);
+}

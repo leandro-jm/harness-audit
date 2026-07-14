@@ -5,6 +5,8 @@ import { setLang, t } from "./i18n/index.js";
 import { loadRepoContext } from "./context/repo-context.js";
 import { describeDetection } from "./context/summary.js";
 import { runChecks } from "./app/run-checks.js";
+import { computeScore } from "./scoring/engine.js";
+import { formatScore, formatPercent } from "./util/format.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -62,9 +64,14 @@ async function main(argv: string[]): Promise<number> {
     process.stdout.write(line + "\n");
   }
 
-  // M2: roda os checks disponíveis e imprime resultados crus (temporário).
+  // M2/M3: roda os checks e calcula o score (render bonito entra no M4).
   const results = await runChecks(ctx);
-  process.stdout.write("\nChecks:\n");
+  const score = computeScore(results);
+
+  process.stdout.write(
+    `\nHARNESS SCORE: ${formatScore(score.global)} / 4 · ${t(`level.${score.level}`)}\n` +
+      `Confiança: ${formatPercent(score.confidence)} baseado em evidência\n\nChecks:\n`,
+  );
   for (const r of results) {
     process.stdout.write(
       `  ${r.checkId} [${r.status}] ${r.points}/${r.max} · ${t(`seal.${r.seal}`)}` +
