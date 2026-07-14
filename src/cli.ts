@@ -1,5 +1,9 @@
 import { parseArgs } from "node:util";
 import { VERSION } from "./version.js";
+import { resolveOptions } from "./app/options.js";
+import { setLang, t } from "./i18n/index.js";
+import { loadRepoContext } from "./context/repo-context.js";
+import { describeDetection } from "./context/summary.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -27,6 +31,7 @@ async function main(argv: string[]): Promise<number> {
       json: { type: "boolean", default: false },
       out: { type: "string" },
       color: { type: "boolean", default: true },
+      lang: { type: "string" },
       version: { type: "boolean", default: false },
       help: { type: "boolean", default: false },
     },
@@ -41,14 +46,27 @@ async function main(argv: string[]): Promise<number> {
     return 0;
   }
 
-  // Fluxo interativo completo entra no M6 (app/wizard.ts).
-  process.stdout.write(`harness-audit v${VERSION} — scaffold pronto.\n`);
+  const options = resolveOptions(values);
+  setLang(options.lang);
+
+  const ctx = await loadRepoContext(options);
+  if (!ctx.git.isRepo) {
+    process.stderr.write(t("detect.noGit", { path: ctx.root }) + "\n");
+    return 2;
+  }
+
+  // M1: imprime a detecção. Fluxo interativo completo entra no M6.
+  process.stdout.write(`harness-audit v${VERSION}\n`);
+  for (const line of describeDetection(ctx)) {
+    process.stdout.write(line + "\n");
+  }
   return 0;
 }
 
 main(process.argv.slice(2))
   .then((code) => process.exit(code))
   .catch((err: unknown) => {
-    process.stderr.write(`Erro inesperado: ${String(err)}\n`);
+    const msg = err instanceof Error ? err.message : String(err);
+    process.stderr.write(`Erro: ${msg}\n`);
     process.exit(2);
   });

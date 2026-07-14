@@ -36,6 +36,7 @@
   "dependencies": {
     "@clack/prompts": "^1.7.0",
     "picocolors": "^1.1.1",
+    "picomatch": "^4.0.5",
     "simple-git": "^3.36.0",
     "tinyglobby": "^0.2.17",
     "yaml": "^2.9.0"
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.1",
+    "@types/picomatch": "^4.0.3",
     "eslint": "^10.7.0",
     "prettier": "^3.9.5",
     "tsup": "^8.5.1",
