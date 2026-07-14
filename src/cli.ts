@@ -4,6 +4,7 @@ import { resolveOptions } from "./app/options.js";
 import { setLang, t } from "./i18n/index.js";
 import { loadRepoContext } from "./context/repo-context.js";
 import { describeDetection } from "./context/summary.js";
+import { runChecks } from "./app/run-checks.js";
 
 const HELP = `harness-audit v${VERSION}
 Auditoria de SDD e Harness Engineering. 100% local · somente leitura.
@@ -59,6 +60,17 @@ async function main(argv: string[]): Promise<number> {
   process.stdout.write(`harness-audit v${VERSION}\n`);
   for (const line of describeDetection(ctx)) {
     process.stdout.write(line + "\n");
+  }
+
+  // M2: roda os checks disponíveis e imprime resultados crus (temporário).
+  const results = await runChecks(ctx);
+  process.stdout.write("\nChecks:\n");
+  for (const r of results) {
+    process.stdout.write(
+      `  ${r.checkId} [${r.status}] ${r.points}/${r.max} · ${t(`seal.${r.seal}`)}` +
+        (r.recommendationId ? ` → ${r.recommendationId}` : "") +
+        "\n",
+    );
   }
   return 0;
 }

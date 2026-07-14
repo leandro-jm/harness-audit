@@ -32,4 +32,31 @@ export const ptBR: Messages = {
   "lang.python": "Python",
   "lang.go": "Go",
   "lang.unknown": "não identificada",
+
+  // Dimensões
+  "dim.D1": "Especificação",
+  "dim.D2": "Guias",
+  "dim.D3": "Sensores",
+  "dim.D4": "Guardrails",
+  "dim.D5": "Memória",
+  "dim.D6": "Steering",
+
+  // Selos de origem
+  "seal.evidencia": "evidência",
+  "seal.proxy": "proxy",
+  "seal.autorrelato": "autorrelato",
+
+  // Check 2.1 — guia de agente existe
+  "check.2.1.title": "Guia de agente existe",
+  "check.2.1.found": "Guia encontrado: {file}",
+  "check.2.1.none": "Nenhum guia de agente (CLAUDE.md, AGENTS.md, .cursor/rules…)",
+  "check.2.1.partial": "Só regras auxiliares; falta um guia principal (CLAUDE.md/AGENTS.md)",
+  "check.2.1.notPrepared": "Sem guia de agente — a preparar para receber agentes",
+
+  // Check 3.1 — CI existe e roda em PR
+  "check.3.1.title": "CI existe e roda em PR",
+  "check.3.1.noCi": "Nenhum CI detectado (sem workflows/pipelines)",
+  "check.3.1.onPr": "Workflow roda em pull_request: {file}",
+  "check.3.1.noPrTrigger": "CI existe mas não dispara em pull_request",
+  "check.3.1.detectedNotParsed": "CI {provider} detectado; gatilho de PR não verificado nesta versão",
 };
