@@ -5,8 +5,13 @@ import type { AuditResult } from "../app/run-audit.js";
 import { topGaps } from "../scoring/gaps.js";
 import { recommendationFor } from "../recommendations/catalog.js";
 
-/** Contrato de máquina (harness-score.json). Bump em `schemaVersion` a cada mudança de forma. */
-export const SCHEMA_VERSION = "1.0.0";
+/**
+ * Contrato de máquina (harness-score.json). Bump em `schemaVersion` a cada
+ * mudança de forma. 2.0.0: entra a dimensão D7 (Segurança) — a média passa de 6
+ * para 7 dimensões, então o valor absoluto do score muda mesmo sem mudança no
+ * repo (quebra de comparabilidade com baselines 1.x; PRD §7.5).
+ */
+export const SCHEMA_VERSION = "2.0.0";
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;

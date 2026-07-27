@@ -40,6 +40,8 @@ export const ptBR: Messages = {
   "dim.D4": "Guardrails",
   "dim.D5": "Memória",
   "dim.D6": "Steering",
+  "dim.D7": "Segurança",
+  "dim.D8": "Runtime",
 
   // Selos de origem
   "seal.evidencia": "evidência",
@@ -91,6 +93,10 @@ export const ptBR: Messages = {
   "q.tasksFromSpec.yes": "Sim, sempre",
   "q.tasksFromSpec.partial": "Parcialmente",
   "q.tasksFromSpec.no": "Não",
+  "q.vulnToRule": "Quando aparece uma vulnerabilidade, o time adiciona regra/sensor para a classe toda?",
+  "q.vulnToRule.yes": "Sim, viram regra/sensor",
+  "q.vulnToRule.sometimes": "Às vezes",
+  "q.vulnToRule.no": "Não, só corrige o caso",
 
   // Relatório (terminal + arquivos)
   "report.scoreLabel": "HARNESS SCORE",
@@ -100,11 +106,50 @@ export const ptBR: Messages = {
   "report.noGaps": "Sem lacunas priorizadas — harness sólido.",
   "report.dimNa": "n/d",
 
+  // Gate de CI (--gate)
+  "gate.pass": "GATE OK: score {actual} ≥ mínimo {min}",
+  "gate.fail": "GATE REPROVADO: score {actual} < mínimo {min}",
+
+  // Comparação com baseline (--baseline)
+  "diff.title": "COMPARAÇÃO COM BASELINE",
+  "diff.global": "Score global: {current} ({delta} vs baseline {baseline})",
+  "diff.schemaMismatch":
+    "⚠ baseline em schema {baseline}; atual {current} — a D7 mudou a média, score absoluto não é diretamente comparável.",
+  "diff.notFound": "Baseline não encontrado ou inválido: {file}",
+
+  // Trend histórico (--history)
+  "history.title": "EVOLUÇÃO DO HARNESS SCORE",
+  "history.empty":
+    "Sem harness-score.json commitado no histórico. Commite o relatório (--json) ao longo do tempo para ver a tendência.",
+  "history.current": "Atual (não commitado): {score} / 4",
+
+  // Anotações de PR (--format=github)
+  "annotation.score": "Harness Score {score}/4 · {level}",
+
+  // Modo org (harness-audit org)
+  "org.title": "HARNESS ORG · {n} repositórios",
+  "org.average": "Média: {avg} / 4",
+  "org.skip": "ignorado (não é repo git): {path}",
+  "org.noTargets": "Nenhum repositório git encontrado. Uso: harness-audit org <caminhos|glob>",
+  "org.gateFail": "GATE REPROVADO: {n} repositório(s) abaixo do mínimo {min}",
+  "org.gatePass": "GATE OK: todos os repositórios ≥ mínimo {min}",
+
+  // Comando checks (harness-audit checks [id])
+  "explain.title": "CHECKS ({n})",
+  "explain.notFound": "Check não encontrado: {id}",
+  "explain.dimension": "Dimensão",
+  "explain.kind": "Origem",
+  "explain.profiles": "Perfis",
+  "explain.profilesAll": "todos os perfis",
+  "explain.source": "Fonte conceitual",
+  "explain.recommendation": "Recomendação",
+
   // Fontes conceituais (rastreabilidade, Apêndice B)
   "source.bockeler": "Böckeler · Harness Engineering (Thoughtworks)",
   "source.coala": "CoALA · taxonomia de memória de agente",
   "source.sdd": "Spec-Driven Development (Spec Kit / Kiro / OpenSpec)",
   "source.harness": "Série Harness Engineering",
+  "source.security": "OWASP DSOMM · NIST SSDF (SP 800-218)",
 
   // Exportação
   "export.prompt": "Exportar relatório?",
@@ -144,6 +189,17 @@ export const ptBR: Messages = {
   "rec.6.2": "Itere no harness a partir dos fixes — cada rajada de conserto é sinal para ajustar guia/sensor.",
   "rec.6.3": "Ao errar, conserte primeiro o guia ou o sensor (feche o steering loop), não só o código.",
   "rec.6.4": "Dê dono ao harness, com backlog de guias e sensores a evoluir.",
+  "rec.7.1": "Configure SAST dedicado em CI (CodeQL, Semgrep) como sensor de segurança a cada mudança.",
+  "rec.7.2": "Monitore dependências: update automatizado (Dependabot/Renovate) e varredura de vulnerabilidades no CI.",
+  "rec.7.3": "Adote um scanner de segredos dedicado (gitleaks/trufflehog) em CI ou pre-commit.",
+  "rec.7.4": "Commite o lockfile e mantenha o pinning íntegro (sem deps por git/URL); considere um SBOM.",
+  "rec.7.5": "Declare a política de segurança em SECURITY.md com canal e processo de reporte de vulnerabilidade.",
+  "rec.7.6": "Faça os sensores de segurança rodarem em pull_request e bloquearem o merge (branch protection).",
+  "rec.7.7": "Ao surgir uma vulnerabilidade, adicione uma regra/sensor que pegue a classe inteira, não só o caso.",
+  "rec.8.1": "Configure evals de LLM (promptfoo/deepeval) rodando em CI como sensor de qualidade a cada mudança.",
+  "rec.8.2": "Versione os prompts como artefatos no repo (prompts/), não hardcoded — é o feedforward do runtime.",
+  "rec.8.3": "Instrumente observabilidade de LLM (traços, custo por turno) com LangSmith/Langfuse/OpenLLMetry.",
+  "rec.8.4": "Adicione guardrails de tool use / validação de saída (guardrails-ai, NeMo, llm-guard).",
 
   // Check 2.1 — guia de agente existe
   "check.2.1.title": "Guia de agente existe",
@@ -231,6 +287,8 @@ export const ptBR: Messages = {
   "check.3.5.none": "Sem sensor de fronteiras de módulo (dependency-cruiser, boundaries…)",
   "check.3.6.title": "Sensores bloqueiam merge",
   "check.3.6.block": "Time confirma: sensores bloqueiam merge (branch protection)",
+  "check.3.6.blockEvidence": "Branch protection exige checks: sensores bloqueiam o merge (via gh)",
+  "check.3.6.informEvidence": "Branch protection sem required checks: sensores não bloqueiam (via gh)",
   "check.3.6.inform": "Sensores apenas informam, não bloqueiam merge",
   "check.3.6.noCi": "Sem CI — nada a bloquear",
   "check.3.6.unknown": "Bloqueio de merge não confirmado",
@@ -302,4 +360,64 @@ export const ptBR: Messages = {
   "check.6.4.none": "Ninguém responsável pelo harness",
   "check.6.4.unanswered": "Autorrelato não respondido",
   "check.6.4.weak": "Harness sem dono claro com backlog",
+
+  // D7 · Segurança (DevSecOps)
+  "check.7.1.title": "SAST configurado",
+  "check.7.1.dedicated": "SAST dedicado: {file}",
+  "check.7.1.dedicatedCi": "SAST dedicado em CI (CodeQL/Semgrep/njsscan)",
+  "check.7.1.lintOnly": "Só lint de segurança ({dep}) — sem SAST dedicado",
+  "check.7.1.none": "Sem análise estática de segurança (CodeQL, Semgrep…)",
+  "check.7.1.weak": "Cobertura de SAST parcial (só lint de segurança)",
+  "check.7.2.title": "Dependências monitoradas (SCA)",
+  "check.7.2.updates": "Update automatizado de dependências: {file}",
+  "check.7.2.audit": "Varredura de dependências no CI (audit/osv/trivy)",
+  "check.7.2.none": "Dependências sem monitoramento (Dependabot/Renovate/audit)",
+  "check.7.2.weak": "Monitoramento de dependências parcial",
+  "check.7.2.noManifest": "Sem manifesto de dependências — SCA não se aplica",
+  "check.7.3.title": "Secret scanning dedicado",
+  "check.7.3.dedicated": "Scanner de segredos dedicado: {file}",
+  "check.7.3.dedicatedCi": "Scanner de segredos dedicado em CI",
+  "check.7.3.basic": "Higiene básica (.env ignorado) — sem scanner dedicado",
+  "check.7.3.none": "Sem secret scanning",
+  "check.7.3.weak": "Secret scanning só na higiene básica",
+  "check.7.4.title": "Higiene de supply chain",
+  "check.7.4.lockfile": "Lockfile commitado: {file}",
+  "check.7.4.pinned": "Dependências pinadas (sem git/URL soltos)",
+  "check.7.4.sbom": "SBOM/attestation declarada: {file}",
+  "check.7.4.unpinned": "Há dependências não pinadas (git/URL) — integridade parcial",
+  "check.7.4.noLockfile": "Sem lockfile commitado — build não reprodutível",
+  "check.7.4.noManifest": "Sem manifesto de dependências — supply chain não se aplica",
+  "check.7.5.title": "Política de resposta a vulnerabilidade",
+  "check.7.5.found": "Política de segurança: {file}",
+  "check.7.5.none": "Sem SECURITY.md (canal de reporte de vulnerabilidade)",
+  "check.7.6.title": "Sensores de segurança bloqueiam e rodam em PR",
+  "check.7.6.blockOnPr": "Sensores de segurança rodam em PR e bloqueiam o merge",
+  "check.7.6.onPrOnly": "Sensores de segurança rodam em PR mas só informam",
+  "check.7.6.notOnPr": "Sensores de segurança existem mas não rodam em pull_request",
+  "check.7.6.blockUnknown": "Bloqueio de merge dos sensores de segurança não confirmado",
+  "check.7.6.noCi": "Sem CI — nada a bloquear",
+  "check.7.6.noSensor": "Sem sensor de segurança no CI para bloquear",
+  "check.7.7.title": "Vulnerabilidade vira regra/sensor",
+  "check.7.7.yes": "Time confirma: vuln nova vira regra/sensor da classe",
+  "check.7.7.sometimes": "Às vezes a vuln vira regra/sensor",
+  "check.7.7.no": "Vuln só é corrigida no caso pontual",
+  "check.7.7.unanswered": "Autorrelato não respondido",
+  "check.7.7.weak": "Vuln nem sempre vira regra/sensor",
+
+  // D8 · Runtime harness (uses-ai / both)
+  "check.8.1.title": "Evals de LLM configuradas",
+  "check.8.1.suite": "Suíte de evals: {file}",
+  "check.8.1.depOnly": "Framework de eval nas dependências, sem suíte configurada",
+  "check.8.1.none": "Sem evals de LLM (promptfoo, deepeval, ragas…)",
+  "check.8.1.weak": "Evals de LLM incipientes (só dependência)",
+  "check.8.2.title": "Prompts versionados",
+  "check.8.2.found": "Prompt versionado no repo: {file}",
+  "check.8.2.none": "Prompts não versionados (provavelmente hardcoded)",
+  "check.8.3.title": "Observabilidade / custo de LLM",
+  "check.8.3.found": "Instrumentação de observabilidade/custo de LLM detectada",
+  "check.8.3.none": "Sem observabilidade de LLM (traços, custo por turno)",
+  "check.8.4.title": "Guardrails de tool use / saída",
+  "check.8.4.found": "Guardrails de LLM: {file}",
+  "check.8.4.dep": "Guardrails de LLM nas dependências",
+  "check.8.4.none": "Sem guardrails de tool use / validação de saída de LLM",
 };

@@ -2,7 +2,16 @@ import type { FileIndex } from "./file-index.js";
 import type { PackageJsonInfo } from "./package-json.js";
 
 export type Language = "ts" | "js" | "python" | "go" | "unknown";
-export type PackageManager = "npm" | "pnpm" | "yarn" | "bun" | "unknown";
+export type PackageManager =
+  | "npm"
+  | "pnpm"
+  | "yarn"
+  | "bun"
+  | "poetry"
+  | "pipenv"
+  | "uv"
+  | "pip"
+  | "unknown";
 
 export interface StackInfo {
   languages: Language[];
@@ -34,7 +43,7 @@ export function detectStack(files: FileIndex, pkg: PackageJsonInfo | undefined):
   else if (hasPython) primary = "python";
 
   const packageManager = detectPackageManager(files, pkg);
-  const supported = primary === "ts" || primary === "js";
+  const supported = primary === "ts" || primary === "js" || primary === "python";
 
   return {
     languages: languages.length ? languages : ["unknown"],
@@ -59,5 +68,10 @@ function detectPackageManager(
   if (files.exists("yarn.lock")) return "yarn";
   if (files.exists(["bun.lockb", "bun.lock"])) return "bun";
   if (files.exists("package-lock.json")) return "npm";
+  // Python: detecta pelo lockfile/manifesto (uv → poetry → pipenv → pip).
+  if (files.exists("uv.lock")) return "uv";
+  if (files.exists("poetry.lock")) return "poetry";
+  if (files.exists(["Pipfile.lock", "Pipfile"])) return "pipenv";
+  if (files.exists(["requirements.txt", "pyproject.toml"])) return "pip";
   return "unknown";
 }

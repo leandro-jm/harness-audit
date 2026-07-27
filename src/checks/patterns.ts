@@ -139,3 +139,127 @@ export const HARNESS_GLOBS = [
   ...ARCH_SENSOR_GLOBS,
   ".github/workflows/**",
 ];
+
+// ── D7 · Segurança (DevSecOps) ──────────────────────────────────────────────
+
+/** SAST dedicado: workflow ou config no repo (7.1). */
+export const SAST_WORKFLOW_GLOBS = [
+  ".github/workflows/codeql.yml",
+  ".github/workflows/codeql.yaml",
+  ".github/workflows/codeql-analysis.yml",
+  ".github/workflows/codeql-analysis.yaml",
+  ".github/workflows/semgrep.yml",
+  ".github/workflows/semgrep.yaml",
+];
+export const SAST_CONFIG_GLOBS = [
+  ".semgrep.yml",
+  ".semgrep.yaml",
+  ".semgrep/**",
+  "semgrep.yml",
+  ".njsscan",
+  "njsscan.yml",
+  ".bandit",
+  "bandit.yaml",
+];
+
+/** Atualização automatizada de dependências (7.2). */
+export const DEP_UPDATE_GLOBS = [
+  ".github/dependabot.yml",
+  ".github/dependabot.yaml",
+  "renovate.json",
+  "renovate.json5",
+  ".renovaterc",
+  ".renovaterc.json",
+  ".github/renovate.json",
+];
+
+/** Manifestos de dependência (para saber se há deps a monitorar/pinar — 7.2/7.4). */
+export const MANIFEST_GLOBS = [
+  "package.json",
+  "pyproject.toml",
+  "requirements.txt",
+  "requirements/*.txt",
+  "Pipfile",
+  "setup.py",
+  "go.mod",
+];
+
+/** Lockfiles commitados (7.4). */
+export const LOCKFILE_GLOBS = [
+  "package-lock.json",
+  "npm-shrinkwrap.json",
+  "pnpm-lock.yaml",
+  "yarn.lock",
+  "bun.lockb",
+  "bun.lock",
+  "poetry.lock",
+  "Pipfile.lock",
+  "uv.lock",
+  "pdm.lock",
+  "go.sum",
+];
+
+/** SBOM / attestation declarada (bônus em 7.4). */
+export const SBOM_GLOBS = [
+  "sbom.json",
+  "sbom.xml",
+  "**/*.cdx.json",
+  "**/*.spdx.json",
+  "**/bom.json",
+];
+
+/** Política de resposta a vulnerabilidade (7.5). */
+export const SECURITY_POLICY_GLOBS = [
+  "SECURITY.md",
+  ".github/SECURITY.md",
+  "docs/SECURITY.md",
+  ".github/SECURITY.rst",
+];
+
+/** Hooks de pre-commit (guardrail local; secret scan em 7.3, sinal em F13). */
+export const PRECOMMIT_GLOBS = [
+  ".pre-commit-config.yaml",
+  ".pre-commit-config.yml",
+  ".husky/**",
+  "lefthook.yml",
+  "lefthook.yaml",
+  ".lefthook.yml",
+  ".lefthook.yaml",
+];
+
+// ── D8 · Runtime harness (perfis uses-ai / both) ────────────────────────────
+
+/** Configs/dirs de avaliação (evals) de LLM (8.1). */
+export const EVAL_GLOBS = [
+  "promptfooconfig.yaml",
+  "promptfooconfig.yml",
+  "promptfoo.config.*",
+  ".promptfoo/**",
+  "evals/**",
+  "eval/**",
+  "**/*.eval.ts",
+  "**/*.eval.py",
+  "deepeval.config.*",
+  ".deepeval/**",
+  "ragas/**",
+];
+
+/** Prompts versionados no repo (8.2). */
+export const PROMPT_GLOBS = [
+  "prompts/**",
+  "prompt/**",
+  ".prompts/**",
+  "**/*.prompt",
+  "**/*.prompty",
+  "**/*.prompt.md",
+  "**/*.prompt.txt",
+];
+
+/** Configs de guardrails de tool use / saída de LLM (8.4). */
+export const GUARDRAIL_GLOBS = [
+  "guardrails.yml",
+  "guardrails.yaml",
+  ".guardrails/**",
+  "nemoguardrails/**",
+  "config/rails/**",
+];

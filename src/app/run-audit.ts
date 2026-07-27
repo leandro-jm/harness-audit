@@ -16,5 +16,5 @@ export interface AuditResult {
  */
 export async function runAudit(ctx: RepoContext): Promise<AuditResult> {
   const results = await runChecks(ctx);
-  return { results, score: computeScore(results) };
+  return { results, score: computeScore(results, ctx.profile) };
 }

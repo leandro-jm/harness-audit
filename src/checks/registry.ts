@@ -26,6 +26,17 @@ import { check61 } from "./d6-steering/6.1.js";
 import { check62 } from "./d6-steering/6.2.js";
 import { check63 } from "./d6-steering/6.3.js";
 import { check64 } from "./d6-steering/6.4.js";
+import { check71 } from "./d7-security/7.1.js";
+import { check72 } from "./d7-security/7.2.js";
+import { check73 } from "./d7-security/7.3.js";
+import { check74 } from "./d7-security/7.4.js";
+import { check75 } from "./d7-security/7.5.js";
+import { check76 } from "./d7-security/7.6.js";
+import { check77 } from "./d7-security/7.7.js";
+import { check81 } from "./d8-runtime/8.1.js";
+import { check82 } from "./d8-runtime/8.2.js";
+import { check83 } from "./d8-runtime/8.3.js";
+import { check84 } from "./d8-runtime/8.4.js";
 
 /**
  * Catálogo de todos os checks (PRD §7.4). Ponto de extensão único: novos checks
@@ -38,6 +49,8 @@ export const ALL_CHECKS: Check[] = [
   check41, check42, check43, check44,
   check51, check52, check53,
   check61, check62, check63, check64,
+  check71, check72, check73, check74, check75, check76, check77,
+  check81, check82, check83, check84,
 ];
 
 /** Checks aplicáveis a um perfil. */
@@ -50,4 +63,11 @@ const TITLE_BY_ID = new Map(ALL_CHECKS.map((c) => [c.id, c.titleKey]));
 /** Chave i18n do título de um check (para relatórios/lacunas). */
 export function checkTitleKey(checkId: string): string | undefined {
   return TITLE_BY_ID.get(checkId);
+}
+
+const WEIGHT_BY_ID = new Map(ALL_CHECKS.map((c) => [c.id, c.weight]));
+
+/** Peso relativo de um check dentro da dimensão (default 1). */
+export function checkWeight(checkId: string): number {
+  return WEIGHT_BY_ID.get(checkId) ?? 1;
 }

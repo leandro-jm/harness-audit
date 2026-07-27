@@ -75,10 +75,11 @@ describe("dogfood — auditoria do próprio repositório", () => {
     ctx.profile = "built-by-ai";
     const audit = await runAudit(ctx);
 
-    // 6 dimensões, 26 checks executados, score válido.
-    expect(audit.score.dimensions).toHaveLength(6);
+    // 8 dimensões (D8 nula p/ built-by-ai), 33 checks executados, score válido.
+    expect(audit.score.dimensions).toHaveLength(8);
     const totalChecks = audit.results.length;
-    expect(totalChecks).toBe(26);
+    expect(totalChecks).toBe(33); // D8 só roda em uses-ai/both
+    expect(audit.score.dimensions.find((d) => d.dimension === "D8")!.score).toBeNull();
     expect(audit.score.global).toBeGreaterThanOrEqual(0);
     expect(audit.score.global).toBeLessThanOrEqual(4);
 
@@ -91,6 +92,6 @@ describe("dogfood — auditoria do próprio repositório", () => {
     const json = buildScoreJson(ctx, audit, "2026-07-14T00:00:00.000Z");
     const serialized = serializeScoreJson(json);
     expect(() => JSON.parse(serialized)).not.toThrow();
-    expect(json.schemaVersion).toBe("1.0.0");
+    expect(json.schemaVersion).toBe("2.0.0");
   });
 });

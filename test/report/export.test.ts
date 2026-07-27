@@ -54,12 +54,12 @@ async function auditFixture() {
 const DATE = new Date("2026-07-14T12:00:00Z");
 
 describe("harness-score.json", () => {
-  it("tem schemaVersion, 6 dimensões e checks", async () => {
+  it("tem schemaVersion, 8 dimensões e checks", async () => {
     const { ctx, audit } = await auditFixture();
     const json = buildScoreJson(ctx, audit, DATE.toISOString());
-    expect(json.schemaVersion).toBe("1.0.0");
+    expect(json.schemaVersion).toBe("2.0.0");
     const score = json.score as { dimensions: unknown[] };
-    expect(score.dimensions).toHaveLength(6);
+    expect(score.dimensions).toHaveLength(8);
     expect((json.tool as { name: string }).name).toBe("harness-audit");
     expect(Array.isArray(json.recommendations)).toBe(true);
   });

@@ -107,11 +107,11 @@ describe("computeScore — global e confiança", () => {
     expect(score.level).toBe("fe");
   });
 
-  it("resultados vazios → global 0, nível fe, seis dimensões null", () => {
+  it("resultados vazios → global 0, nível fe, oito dimensões null", () => {
     const score = computeScore([]);
     expect(score.global).toBe(0);
     expect(score.level).toBe("fe");
-    expect(score.dimensions).toHaveLength(6);
+    expect(score.dimensions).toHaveLength(8);
     expect(score.dimensions.every((d) => d.score === null)).toBe(true);
   });
 });

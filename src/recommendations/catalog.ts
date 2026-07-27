@@ -4,7 +4,7 @@
  * O texto vem do i18n em `rec.<checkId>`.
  */
 
-export type Source = "bockeler" | "coala" | "sdd" | "harness";
+export type Source = "bockeler" | "coala" | "sdd" | "harness" | "security";
 
 export interface Recommendation {
   id: string; // R-1.4
@@ -41,6 +41,17 @@ const SOURCE_BY_CHECK: Record<string, Source> = {
   "6.2": "harness",
   "6.3": "harness",
   "6.4": "harness",
+  "7.1": "security",
+  "7.2": "security",
+  "7.3": "security",
+  "7.4": "security",
+  "7.5": "security",
+  "7.6": "security",
+  "7.7": "security",
+  "8.1": "harness",
+  "8.2": "harness",
+  "8.3": "harness",
+  "8.4": "harness",
 };
 
 export function recommendationFor(checkId: string): Recommendation | undefined {

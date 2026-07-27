@@ -3,6 +3,35 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/).
 Este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [Não lançado]
+
+Fecha o roadmap v0.2 e adianta itens da v1.0. `harness-score.json` sobe para
+`schemaVersion` **2.0.0** (D7 muda a média de 6→7 dimensões; baselines 1.x não são
+diretamente comparáveis).
+
+### Adicionado
+
+- **D7 · Segurança (DevSecOps)** — 7 checks estáticos (SAST, SCA/deps, secret
+  scanning, supply chain, política de vuln, sensores bloqueiam PR, vuln vira regra),
+  ancorados em OWASP DSOMM e NIST SSDF. Cross-perfil. "Detecta o sensor, não o roda."
+- **D8 · Runtime harness** (perfis `uses-ai`/`both`) — evals de LLM, prompts
+  versionados, observabilidade/custo e guardrails de tool use (detecção estática).
+- **Gate de CI**: `--ci`, `--gate`, `--min <n>` (exit 1 abaixo do limiar).
+- **Modo org**: `harness-audit org <caminhos|glob>` ranqueia vários repos locais.
+- **Comparação local** `--baseline <file>` e **tendência** `--history` (via `git show`,
+  zero checkout).
+- **Saídas de máquina**: `--format github` (anotações de PR) e `--format sarif`
+  (code scanning). **Badge**: `--badge` → `harness-badge.svg` commitável.
+- **`--github`**: branch protection vira evidência (via `gh`, opt-in — única exceção
+  ao zero-rede; degrada para autorrelato).
+- **Stack Python** de primeira classe (pytest/ruff/mypy, lockfiles, guia específico).
+- **en-US** completo (`--lang en`) e **pesos por perfil** no score.
+- **Config de projeto** `.harnessrc.json` (defaults de flag; não altera pontos).
+- **Cobertura de testes** com gate (`test:coverage`), matriz de Node (20/22/24) e
+  workflow de release/publish npm; Dependabot.
+- 112 testes (era 48), incluindo testes de fronteira dos checks antes só cobertos
+  indiretamente.
+
 ## [0.1.0] — 2026-07-14
 
 MVP: fluxo interativo completo de auditoria de harness.

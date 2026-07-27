@@ -90,6 +90,7 @@ export function buildMarkdownReport(
   L.push("- **Böckeler** · *Harness Engineering* (martinfowler.com / Thoughtworks)");
   L.push("- **CoALA** · taxonomia de memória de agente (arXiv:2309.02427)");
   L.push("- **Spec-Driven Development** · Spec Kit, AWS Kiro, OpenSpec");
+  L.push("- **OWASP DSOMM** · **NIST SSDF** (SP 800-218) — dimensão de segurança (D7)");
   L.push("");
 
   return L.join("\n");

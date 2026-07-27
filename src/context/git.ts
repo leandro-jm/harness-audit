@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { simpleGit, type SimpleGit } from "simple-git";
 
 /** Um commit já parseado, com trailers e arquivos alterados prontos para uso. */
@@ -43,6 +44,8 @@ export interface GitInfo {
   lastCommitTouching(paths: string[]): Promise<GitCommit | null>;
   /** Primeiro commit (mais antigo) que ADICIONOU algum dos paths, ou null. */
   firstCommitAdding(paths: string[]): Promise<GitCommit | null>;
+  /** Conteúdo de um arquivo em uma revisão (git show rev:path), ou null. */
+  showFile(rev: string, path: string): Promise<string | null>;
 }
 
 // Separadores de controle: %x1e entre registros, %x1f entre campos, %x02 encerra
@@ -164,6 +167,12 @@ class GitReader implements GitInfo {
     return parseLog(raw)[0] ?? null;
   }
 
+  async showFile(rev: string, path: string): Promise<string | null> {
+    if (!this.isRepo || !rev || !path) return null;
+    const raw = await this.safeRaw(["show", `${rev}:${path}`]);
+    return raw.length > 0 ? raw : null;
+  }
+
   private async safeRaw(args: string[]): Promise<string> {
     try {
       return await this.git.raw(args);
@@ -176,6 +185,10 @@ class GitReader implements GitInfo {
 
 /** Carrega os metadados do repositório e devolve um leitor somente-leitura. */
 export async function loadGit(root: string): Promise<GitInfo> {
+  // simple-git lança na construção se o diretório não existe — guarda antes.
+  if (!existsSync(root)) {
+    return new GitReader(simpleGit(), false, false, 0, "", basename(root));
+  }
   const git = simpleGit({ baseDir: root });
 
   let isRepo: boolean;

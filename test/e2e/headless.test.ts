@@ -105,8 +105,9 @@ describe("e2e headless — orquestração completa", () => {
     ctx.profile = "built-by-ai";
     const qs = relevantQuestions(ctx);
     expect(qs.length).toBeLessThanOrEqual(6);
-    // Perfil AI + CI + guia + specs sem tasks → fixFirst, harnessOwner, sensors, learnings, tasks
-    expect(qs.map((q) => q.checkId).sort()).toEqual(["1.5", "3.6", "5.3", "6.3", "6.4"]);
+    // AI + CI + guia + specs sem tasks + manifesto → +7.7 (única pergunta nova da D7).
+    // Exatamente 6 — no teto de UX (§6.2), confirmando que a D7 cabe.
+    expect(qs.map((q) => q.checkId).sort()).toEqual(["1.5", "3.6", "5.3", "6.3", "6.4", "7.7"]);
   });
 
   it("perfil conventional sem guia → 2.1/4.4 viram not-prepared, não zero", async () => {

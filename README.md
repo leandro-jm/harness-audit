@@ -33,16 +33,36 @@ cd /caminho/do/projeto
 harness-audit
 ```
 
-## Flags (v0.1)
+## Uso
+
+```bash
+harness-audit                       # wizard interativo
+harness-audit --ci --gate --min 2   # gate de CI (exit 1 se score < mínimo)
+harness-audit org ./repos/*         # ranqueia vários repositórios locais
+harness-audit checks [id]           # lista/detalha os checks e suas fontes
+```
+
+## Flags
 
 | Flag | Função |
 |---|---|
 | `--path <dir>` | Auditar subdiretório (monorepo) |
 | `--profile <built-by-ai\|uses-ai\|both\|conventional>` | Pular a pergunta de perfil |
+| `--ci` | Headless, sem prompts (pipelines) |
+| `--gate` / `--min <n>` | Falha (exit 1) se o score global < mínimo (default 2,0) |
+| `--baseline <file>` | Comparar com um `harness-score.json` anterior (local) |
+| `--history` | Evolução do score pelos `harness-score.json` commitados |
+| `--format <terminal\|github\|sarif>` | Saída de máquina (anotações de PR / code scanning) |
+| `--badge` | Gerar `harness-badge.svg` commitável |
+| `--github` | Ler branch protection via `gh` (opt-in; única exceção ao zero-rede) |
 | `--json` | Exportar `harness-score.json` sem prompt |
 | `--out <dir>` | Diretório de saída dos relatórios |
+| `--lang <pt\|en>` | Idioma da saída (default pt) |
 | `--no-color` | Terminal sem cores (acessibilidade/CI) |
 | `--version` / `--help` | Versão / ajuda |
+
+Defaults de flag podem morar em `.harnessrc.json` (`profile`, `gate`, `min`, `lang`, `out`);
+a CLI sempre vence. Config **não** mexe em pontos de check — só em apresentação/gate.
 
 ## Desenvolvimento
 

@@ -2,6 +2,7 @@ import { PROFILES } from "../../core/types.js";
 import type { Check } from "../types.js";
 import { evidence, measured, notApplicable, type CheckMeta } from "../result.js";
 import { guideFiles, guideText } from "../shared/guide.js";
+import { projectScripts } from "../shared/scripts.js";
 
 const META: CheckMeta = { id: "2.2", dimension: "D2", kind: "evidence" };
 
@@ -28,7 +29,7 @@ export const check22: Check = {
     const text = guideText(ctx);
     const lower = text.toLowerCase();
 
-    const realScripts = Object.keys(ctx.pkg?.scripts ?? {});
+    const realScripts = projectScripts(ctx);
     const scriptRefs = realScripts.filter(
       (s) => new RegExp(`\\b(run\\s+)?${escapeRe(s)}\\b`).test(lower),
     );
@@ -36,8 +37,9 @@ export const check22: Check = {
     const realDirs = ctx.files.topLevelDirs;
     const dirRefs = realDirs.filter((d) => new RegExp(`\\b${escapeRe(d)}/`).test(text));
 
-    // Blocos de comando executável (npm/pnpm/yarn + algo).
-    const hasCommandBlock = /(npm|pnpm|yarn|npx)\s+[\w:-]+/.test(text);
+    // Blocos de comando executável (JS, Python, Make, Go…).
+    const hasCommandBlock =
+      /(npm|pnpm|yarn|npx|pytest|ruff|mypy|poetry|uv|pip|python3?|make|go|cargo)\s+[\w:.-]+/.test(text);
 
     const distinctRefs = new Set<string>([
       ...scriptRefs.map((s) => `s:${s}`),

@@ -19,6 +19,7 @@ const BEST_ANSWERS: SelfReportAnswers = {
   sensorsBlockMerge: "block",
   learningsToGuide: "yes",
   tasksFromSpec: "yes",
+  vulnToRule: "yes",
 };
 
 const MEDIUM_ANSWERS: SelfReportAnswers = {
@@ -45,6 +46,15 @@ const PKG_FULL = JSON.stringify({
 const SPECIFIC_GUIDE =
   "# CLAUDE.md\n\n## Comandos\nRode `pnpm build`, `pnpm test`, `pnpm lint`.\n\n" +
   "## Arquitetura\nCódigo em src/. Specs em specs/. Veja as convenções abaixo.\n";
+
+// ── Sinais de segurança (D7), graduados por nível ───────────────────────────
+const LOCKFILE = "lockfileVersion: '9.0'\n";
+const SECURITY_MD = "# Política de Segurança\n\nReporte vulnerabilidades a security@example.com.\n";
+const DEPENDABOT =
+  "version: 2\nupdates:\n  - package-ecosystem: npm\n    directory: /\n    schedule:\n      interval: weekly\n";
+const CODEQL_WORKFLOW =
+  "name: CodeQL\non: [pull_request]\njobs:\n  analyze:\n    runs-on: ubuntu-latest\n    steps:\n" +
+  "      - uses: github/codeql-action/init@v3\n      - uses: github/codeql-action/analyze@v3\n";
 
 // ── Fé: nada além de código ────────────────────────────────────────────────
 function feFixture(): FixtureSpec {
@@ -120,6 +130,10 @@ function reguladoFixture(): FixtureSpec {
       ".github/pull_request_template.md": "## O quê\n## Por quê",
       ".gitleaks.toml": "[allowlist]",
       ".gitignore": ".env\nnode_modules/\n",
+      // D7: secret scanner (gitleaks) + supply chain (lockfile) + SCA + política.
+      "pnpm-lock.yaml": LOCKFILE,
+      "SECURITY.md": SECURITY_MD,
+      ".github/dependabot.yml": DEPENDABOT,
       "src/index.ts": "export const x = 1;",
     },
     author: { name: "Ana", email: "ana@x.co" },
@@ -157,6 +171,11 @@ function dirigidoFixture(): FixtureSpec {
       ".claude/settings.json": JSON.stringify({
         permissions: { allow: ["Bash(pnpm test)", "Read(src/**)"], deny: ["Bash(rm)"] },
       }),
+      // D7 completo: SAST (CodeQL em PR), SCA, secret scanner, lockfile, política.
+      "pnpm-lock.yaml": LOCKFILE,
+      "SECURITY.md": SECURITY_MD,
+      ".github/dependabot.yml": DEPENDABOT,
+      ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
       "src/index.ts": "export const x = 1;",
     },
     author: { name: "Ana", email: "ana@x.co" },

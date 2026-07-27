@@ -8,6 +8,7 @@ import { loadPackageJson, type PackageJsonInfo } from "./package-json.js";
 import { detectStack, type StackInfo } from "./stack.js";
 import { detectCi } from "./ci/ci-detect.js";
 import type { CiModel } from "./ci/ci-model.js";
+import { loadGithubProtection, type GithubProtection } from "./github.js";
 
 /** Aviso de contexto que degrada a cobertura (stack parcial, histórico raso…). */
 export interface ContextNote {
@@ -31,6 +32,8 @@ export interface RepoContext {
   pkg?: PackageJsonInfo;
   stack: StackInfo;
   ci: CiModel;
+  /** Branch protection lida via --github (opt-in). undefined = não consultado/indisponível. */
+  github?: GithubProtection;
   selfReport: SelfReportAnswers;
   notes: ContextNote[];
 }
@@ -51,6 +54,12 @@ export async function loadRepoContext(options: RunOptions): Promise<RepoContext>
   const pkg = loadPackageJson(files);
   const stack = detectStack(files, pkg);
   const ci = detectCi(files);
+
+  // --github (opt-in): única consulta de rede, degradando para undefined.
+  const github =
+    options.github && git.isRepo
+      ? (loadGithubProtection(git.branch, root) ?? undefined)
+      : undefined;
 
   const notes: ContextNote[] = [];
   if (!stack.supported) {
@@ -84,6 +93,7 @@ export async function loadRepoContext(options: RunOptions): Promise<RepoContext>
     pkg,
     stack,
     ci,
+    github,
     selfReport: EMPTY_SELF_REPORT,
     notes,
   };

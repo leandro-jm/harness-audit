@@ -1,12 +1,13 @@
 import type { Lang } from "../core/types.js";
 import { ptBR } from "./pt-BR.js";
+import { enUS } from "./en-US.js";
 
 export type Messages = Record<string, string>;
 
 // v0.1 ships apenas pt-BR; en-US (v0.2) entra aqui como outro dicionário.
 const DICTS: Record<Lang, Messages> = {
   pt: ptBR,
-  en: ptBR,
+  en: enUS,
 };
 
 let current: Lang = "pt";

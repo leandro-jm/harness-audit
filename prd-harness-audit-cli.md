@@ -205,6 +205,8 @@ O perfil ajusta **quais checks rodam** e **o que entra no denominador** do score
 | **Os dois** | União dos dois conjuntos |
 | **Convencional** | D1 a D6 com leitura "pre-flight": o resultado responde "o que falta para receber um agente", e dimensões específicas de IA aparecem como "não preparado" em vez de nota zero punitiva |
 
+> **D7 (Segurança)** aplica-se a **todos os perfis** por igual — segurança não é específica de IA. Nos perfis de IA ela soma às dimensões de harness; no Convencional ela é medida normalmente (não degrada para "não preparado"). É a única dimensão cross-perfil.
+
 ### 7.4 Checks por dimensão
 
 Legenda de tipo: **E** = evidência · **P** = proxy · **A** = autorrelato. Pontos padrão por check: 0 a 2.
@@ -265,12 +267,33 @@ Legenda de tipo: **E** = evidência · **P** = proxy · **A** = autorrelato. Pon
 | 6.3 | Pergunta-assinatura | "Quando o agente entrega errado, o que o time conserta primeiro?" (código na mão / prompt da vez / guia ou sensor) | A |
 | 6.4 | Harness tem dono | Pergunta interativa (responsável + backlog) | A |
 
+#### D7 · Segurança (DevSecOps)
+
+Mede o **preparo de segurança do harness** — se os sensores e guardrails de segurança estão *configurados* no repositório —, **nunca** a execução de scanners nem a busca por vulnerabilidades. Como todo o resto do produto, é 100% estático: lê arquivos de config e de CI como evidência e **não roda** `npm audit`, njsscan, Semgrep etc. (respeita o `SECURITY.md`: zero rede, somente leitura, nunca executa código do repo auditado). A regra é **detectar o sensor, não rodá-lo**.
+
+| ID | Check | Como mede | Tipo |
+|---|---|---|---|
+| 7.1 | SAST configurado | Análise estática de segurança presente: CodeQL (`.github/workflows/codeql.yml`, `github/codeql-action`), Semgrep (`.semgrep.yml`, job no CI), njsscan (job/`.njsscan`) ou `eslint-plugin-security` (devDep + regra ativa no ESLint). 0 = nenhum · 1 = só lint de segurança (heurístico) · 2 = SAST dedicado em CI | E |
+| 7.2 | Dependências monitoradas (SCA) | Atualização automatizada (`.github/dependabot.yml`, `renovate.json`) e/ou varredura de deps no CI (`npm`/`pnpm audit`, `osv-scanner`, `trivy`) — detecta o *step*, não executa. 0 = nada · 1 = update automatizado OU audit · 2 = ambos | E |
+| 7.3 | Secret scanning dedicado | Eleva o 4.2: scanner de segredos configurado (gitleaks/trufflehog/detect-secrets/secretlint) com step em CI ou pre-commit. 0 = nada · 1 = `.env` no `.gitignore` + scan superficial limpo (herda 4.2) · 2 = scanner dedicado em CI/pre-commit | E |
+| 7.4 | Higiene de supply chain | Lockfile commitado; ausência de dependências não pinadas (por URL/git); bônus por SBOM/attestation declarada. 0 = sem lockfile · 1 = lockfile presente · 2 = lockfile + pinning íntegro (ou SBOM) | E |
+| 7.5 | Política de resposta a vulnerabilidade | Canal de divulgação declarado: `SECURITY.md` (raiz ou `.github/`) com contato/processo de reporte. | E |
+| 7.6 | Sensores de segurança bloqueiam e rodam em PR | Os sensores de 7.1–7.3 disparam em `pull_request` (não só `schedule`/manual) e bloqueiam merge — **reaproveita** o sinal de branch protection do 3.6 (via `--github` = evidência; senão o autorrelato já existente do 3.6), sem nova pergunta ao usuário. | E/A |
+| 7.7 | Vuln vira regra/sensor | Autorrelato (espelha 5.3/6.3): ao aparecer uma vulnerabilidade, o time adiciona uma regra/sensor que pega a *classe inteira*, ou só corrige o caso pontual? | A |
+
+**Rastreabilidade (Apêndice B):** os checks ancoram no **OWASP DSOMM** (dimensões Implementation, Build & Deployment, Test & Verification, Culture) e no **NIST SSDF (SP 800-218)** — 7.1→PW.7/PW.8, 7.2→PW.4/RV.1, 7.3→PS.1, 7.4→PS.3, 7.5→RV.3, 7.6→PO.3/PW.7, 7.7→RV/cultura. D7 estende o conceito de *sensor* da Böckeler para a classe de segurança.
+
+**Orçamento de UX (§6.2):** D7 adiciona **apenas 1 pergunta interativa** (7.7); o 7.6 reutiliza o autorrelato do 3.6. O total de autorrelatos segue dentro do teto de 6 perguntas por sessão.
+
+**Fase:** nova dimensão, alvo **v0.2** (ver §10 e questão em aberto §14.6).
+
 ### 7.5 Modelo de pontuação
 
 - **Por check:** 0 a 2 pontos conforme critério do check (binário ou graduado).
 - **Por dimensão:** `nota = (pontos obtidos / pontos aplicáveis) × 4`. Checks não aplicáveis (ex.: stack não suportada, autorrelato pulado em `--ci`) saem do denominador, nunca contam como zero.
-- **Score global:** média simples das 6 dimensões na v0.1 (pesos configuráveis ficam como evolução, ver seção 14).
-- **Confiança:** `% de pontos com origem [evidência]` exibido junto ao score. Proxy e autorrelato entram no score, mas rebaixam a confiança.
+- **Score global:** média simples das dimensões aplicáveis — D1 a D6 na v0.1; **D1 a D7 quando a D7 entrar** (v0.2, §10). Pesos configuráveis ficam como evolução (ver seção 14).
+- **Confiança:** `% de pontos com origem [evidência]` exibido junto ao score. Proxy e autorrelato entram no score, mas rebaixam a confiança. (D7 é quase toda `[evidência]`, então tende a *elevar* a confiança.)
+- **Migração ao incluir a D7:** a média passa de 6 para 7 dimensões, então o valor absoluto do score muda mesmo sem nenhuma mudança no repo. A escala 0–4 e os níveis (Fé…Dirigido) permanecem; comparações históricas exigem `schemaVersion` novo no `harness-score.json`. Como as demais, checks de D7 não aplicáveis (ex.: sinal indisponível na stack) saem do denominador — nunca viram zero punitivo.
 
 **Níveis de maturidade:**
 
@@ -385,6 +408,7 @@ interface Check {
 3. **Hospedagem do badge:** SVG commitado no repo vs endpoint (endpoint implicaria serviço, conflita com "zero rede"?).
 4. **Detecção de commits de agente:** cobrir quais assinaturas além de `Co-authored-by` (bots, trailers customizados)?
 5. **Limiar padrão do `--gate`:** 2,0 global? Por dimensão? Definir com dados dos primeiros dogfoods.
+6. **Impacto da D7 no score:** entra com peso igual (média de 7) ou com peso próprio por perfil? Como sinalizar a quebra de comparabilidade histórica (novo `schemaVersion`) sem confundir quem já tem baseline? A D7 deve valer para o `--gate` desde a estreia ou só informar no começo?
 
 ---
 
@@ -413,3 +437,4 @@ interface Check {
 | Taxonomia de memória de agente (working, episódica, semântica, procedural) | Framework CoALA (Princeton/CMU, arXiv:2309.02427) |
 | Spec-Driven Development (specify → plan → tasks → implement; spec como fonte de verdade) | Prática de indústria: GitHub Spec Kit, AWS Kiro, OpenSpec |
 | Checklist de auditoria manual de 12 itens; níveis Fé/Improviso/Instrumentado/Regulado/Dirigido; distinção harness de dev × harness de runtime | Série Harness Engineering (Leandro J Martins) |
+| Maturidade DevSecOps; práticas de software seguro (SAST, SCA, secret scanning, resposta a vulnerabilidade) mapeadas na D7 | OWASP DevSecOps Maturity Model (DSOMM) · NIST Secure Software Development Framework (SSDF), SP 800-218 |

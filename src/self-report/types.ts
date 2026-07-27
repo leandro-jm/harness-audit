@@ -15,6 +15,8 @@ export interface SelfReportAnswers {
   fixFirst?: "code" | "prompt" | "guide-or-sensor";
   /** 6.4 — harness tem dono com backlog? */
   harnessOwner?: "yes-backlog" | "informal" | "none";
+  /** 7.7 — vuln nova vira regra/sensor da classe inteira? */
+  vulnToRule?: "yes" | "sometimes" | "no";
 }
 
 export const EMPTY_SELF_REPORT: SelfReportAnswers = { answered: false };

@@ -21,5 +21,5 @@ referencia a seção que implementa.
 ## Roadmap
 
 - **v0.1 (atual):** fluxo interativo, checks D1–D5 + proxies D6, JS/TS, GitHub Actions, pt-BR.
-- **v0.2:** `--ci`, `--gate`, badge, `--github`, en-US, Python.
+- **v0.2:** `--ci`, `--gate`, badge, `--github`, en-US, Python, **dimensão D7 (segurança/DevSecOps)**.
 - **v1.0:** trilha de runtime harness, modo org multi-repo, comparação histórica.

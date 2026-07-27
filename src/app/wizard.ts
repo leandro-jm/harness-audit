@@ -81,7 +81,7 @@ export async function runWizard(options: RunOptions): Promise<WizardOutcome | "n
         }),
       );
       ctx.stack.primary = lang;
-      ctx.stack.supported = lang === "ts" || lang === "js";
+      ctx.stack.supported = lang === "ts" || lang === "js" || lang === "python";
     }
 
     // 2. Perfil (pulado se veio por --profile).

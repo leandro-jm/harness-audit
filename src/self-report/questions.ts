@@ -1,6 +1,6 @@
 import type { RepoContext } from "../context/repo-context.js";
 import type { SelfReportAnswers } from "./types.js";
-import { SPEC_GLOBS, TASKS_GLOBS, GUIDE_GLOBS } from "../checks/patterns.js";
+import { SPEC_GLOBS, TASKS_GLOBS, GUIDE_GLOBS, MANIFEST_GLOBS } from "../checks/patterns.js";
 
 export interface QuestionOption {
   value: string;
@@ -80,6 +80,19 @@ export const SELF_REPORT_QUESTIONS: SelfReportQuestion[] = [
     // Só pergunta se há specs mas nenhum rastro de tarefas (senão vira evidência).
     isRelevant: (ctx) => ctx.files.exists(SPEC_GLOBS) && !ctx.files.exists(TASKS_GLOBS),
     apply: (a, v) => (a.tasksFromSpec = v as SelfReportAnswers["tasksFromSpec"]),
+  },
+  {
+    // 7.7 — cross-perfil (segurança vale para todos). Única pergunta nova da D7.
+    checkId: "7.7",
+    messageKey: "q.vulnToRule",
+    options: [
+      { value: "yes", labelKey: "q.vulnToRule.yes" },
+      { value: "sometimes", labelKey: "q.vulnToRule.sometimes" },
+      { value: "no", labelKey: "q.vulnToRule.no" },
+    ],
+    // Só pergunta em repo com dependências (onde vuln de terceiros faz sentido).
+    isRelevant: (ctx) => ctx.files.exists(MANIFEST_GLOBS),
+    apply: (a, v) => (a.vulnToRule = v as SelfReportAnswers["vulnToRule"]),
   },
 ];
 
