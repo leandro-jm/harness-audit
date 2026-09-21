@@ -35,7 +35,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@clack/prompts": "^1.7.0",
+    "@clack/prompts": "^1.8.1",
     "picocolors": "^1.1.1",
     "picomatch": "^4.0.5",
     "simple-git": "^3.36.0",
